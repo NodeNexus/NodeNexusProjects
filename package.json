@@ -1,0 +1,12 @@
+{
+  "name": "nodenexus-portfolio",
+  "version": "1.0.0",
+  "description": "My personal portfolio.",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s ."
+  },
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}
