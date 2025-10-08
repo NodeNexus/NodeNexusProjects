@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeNexus | Contact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color-start: #0a0e14; --bg-color-end: #121820; --card-color: #161b22; --border-color: #30363d; --primary-text: #c9d1d9; --secondary-text: #8b949e; --accent-color: #58a6ff; --accent-glow: rgba(88, 166, 255, 0.5); --font-primary: 'Inter', sans-serif; --font-mono: 'Source Code Pro', monospace; --navbar-bg: rgba(22, 27, 34, 0.65); --card-bg: rgba(22, 27, 34, 0.55); --btn-primary-text: #0a0e14; --icon-color: var(--accent-color);
+        }
+        body.light-mode {
+            --bg-color-start: #f0f2f5; --bg-color-end: #ffffff; --card-color: #ffffff; --border-color: #d0d7de; --primary-text: #1f2328; --secondary-text: #57606a; --accent-color: #0969da; --accent-glow: rgba(9, 105, 218, 0.4); --navbar-bg: rgba(255, 255, 255, 0.65); --card-bg: rgba(255, 255, 255, 0.55); --btn-primary-text: #ffffff; --icon-color: #0047b3;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { background: linear-gradient(135deg, var(--bg-color-start), var(--bg-color-end)); color: var(--primary-text); font-family: var(--font-primary); margin: 0; padding: 0; line-height: 1.6; overflow-x: hidden; position: relative; transition: background-color 0.5s ease, color 0.5s ease; }
+        .navbar, .container, footer { position: relative; z-index: 10; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .navbar { backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%); background-color: var(--navbar-bg); border-bottom: 1px solid rgba(88, 166, 255, 0.2); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; transition: background-color 0.5s ease; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 600; color: var(--primary-text); text-decoration: none; transition: color 0.5s ease; }
+        .nav-menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
+        .nav-link { color: var(--secondary-text); text-decoration: none; font-size: 1rem; font-weight: 500; transition: color 0.3s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--accent-color); }
+        .theme-toggle-btn { background: none; border: 1px solid var(--border-color); color: var(--secondary-text); cursor: pointer; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .theme-toggle-btn:hover { color: var(--accent-color); border-color: var(--accent-color); }
+        header { text-align: center; margin-bottom: 3rem; }
+        .page-title { font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 0.5rem; }
+        .subtitle { font-family: var(--font-mono); color: var(--secondary-text); max-width: 600px; margin: 0 auto 3rem auto; }
+        .welcome-container { display: grid; place-items: center; min-height: 70vh; }
+        .welcome-card { text-align: center; max-width: 700px; background: var(--card-bg); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 8px 32px rgba(88, 166, 255, 0.1); padding: 3rem; transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.5s ease; }
+        .welcome-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px var(--accent-glow); }
+        .welcome-card h2 { color: var(--primary-text); font-size: 1.8rem; margin-bottom: 1rem; }
+        .about-me { color: var(--secondary-text); font-size: 1.1rem; margin-bottom: 2rem; }
+        .welcome-buttons { display: flex; justify-content: center; gap: 1rem; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+        .btn-primary { background-color: var(--accent-color); color: var(--btn-primary-text); border: 1px solid var(--accent-color); }
+        .btn-primary:hover { background-color: transparent; color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); transform: scale(1.05); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border-color); color: var(--primary-text); }
+        .btn-secondary:hover { border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); transform: scale(1.05); }
+        #project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+        .project-card { background: var(--card-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.75rem; display: flex; flex-direction: column; opacity: 0; animation: fadeIn 0.5s forwards; transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 8px 40px var(--accent-glow); }
+        .project-card h3 { font-size: 1.5rem; margin: 0 0 0.5rem; color: var(--primary-text); }
+        .project-description { color: var(--secondary-text); font-size: 0.95rem; flex-grow: 1; margin-bottom: 1.5rem; }
+        .tech-tags { margin-bottom: 1.5rem; }
+        .tag { background-color: rgba(88, 166, 255, 0.1); color: var(--accent-color); font-family: var(--font-mono); font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 20px; margin: 0.25rem 0.25rem 0.25rem 0; display: inline-block; }
+        .project-link { color: var(--accent-color); text-decoration: none; font-weight: 600; align-self: flex-start; }
+        .contact-container { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        .contact-link { display: block; width: 100%; max-width: 400px; text-align: center; background: var(--card-bg); backdrop-filter: blur(12px) saturate(180%); -webkit-backdrop-filter: blur(12px) saturate(180%); border: 1px solid var(--border-color); color: var(--primary-text); padding: 1rem; border-radius: 8px; text-decoration: none; font-size: 1.2rem; transition: all 0.3s ease; }
+        .contact-link:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); border-color: var(--accent-color); color: var(--accent-color); }
+        footer { text-align: center; margin-top: 5rem; padding: 2rem 0; border-top: 1px solid var(--border-color); color: var(--secondary-text); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .electrical-icon { position: absolute; font-size: clamp(1.5rem, 5vw, 3rem); opacity: 0.1; pointer-events: none; user-select: none; transition: transform 0.1s ease-out, opacity 0.3s ease; z-index: 1; color: var(--icon-color); filter: drop-shadow(0 0 5px var(--accent-glow)); }
+        @media (max-width: 768px) { .nav-container { flex-direction: row; } .nav-menu { flex-grow: 1; justify-content: center; } .welcome-buttons { flex-direction: column; } .btn { width: 100%; } }
+        @media (max-width: 480px) { .container { padding: 1rem 0.5rem; } #project-grid { grid-template-columns: 1fr; } .welcome-card { padding: 2rem 1.5rem; } .welcome-card h2 { font-size: 1.5rem; } .about-me { font-size: 1rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">NodeNexus_</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="projects.html" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link active">Contact</a></li>
+            </ul>
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle light/dark mode"></button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1 class="page-title">Get In Touch</h1>
+            <p class="subtitle">I'm always open to connecting. You can find me on the following platforms.</p>
+        </header>
+        <main>
+            <div class="contact-container">
+                <a href="https://github.com/NodeNexus" class="contact-link" target="_blank">GitHub</a>
+                <a href="#" class="contact-link" target="_blank">LinkedIn</a>
+                <a href="#" class="contact-link" target="_blank">Twitter / X</a>
+                <a href="mailto:email@example.com" class="contact-link">Email Me</a>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>Built by NodeNexus.</p>
+    </footer>
+
+    <script>
+        const themeToggleButton=document.getElementById("theme-toggle"),sunIcon="☀️",moonIcon="🌙";function applyInitialTheme(){const e=localStorage.getItem("theme")||"dark";document.body.classList.toggle("light-mode","light"===e),themeToggleButton.textContent="light"===e?moonIcon:sunIcon}themeToggleButton.addEventListener("click",()=>{const e=document.body.classList.toggle("light-mode"),t=e?"light":"dark";localStorage.setItem("theme",t),themeToggleButton.textContent=e?moonIcon:sunIcon}),document.addEventListener("DOMContentLoaded",applyInitialTheme);const githubUsername="NodeNexus",projectGrid=document.getElementById("project-grid");async function fetchGithubProjects(){if(!projectGrid)return;projectGrid.innerHTML='<p style="text-align: center; font-family: var(--font-mono); color: var(--secondary-text);">Fetching projects...</p>';try{const e=await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc`);if(!e.ok)throw new Error(`HTTP error! Status: ${e.status}`);const t=await e.json();if(projectGrid.innerHTML="",0===t.length)return void(projectGrid.innerHTML='<p style="text-align: center; color: var(--secondary-text);">No public repositories found.</p>');t.forEach(e=>{if(e.fork)return;const t=e.language?[e.language,...e.topics]:e.topics,n=t.map(e=>`<span class="tag">${e}</span>`).join(""),o=document.createElement("div");o.className="project-card",o.innerHTML=`<h3>${e.name}</h3><p class="project-description">${e.description||"No description provided."}</p><div class="tech-tags">${n||'<span class="tag">No-Tags</span>'}</div><a href="${e.html_url}" class="project-link" target="_blank">View on GitHub &rarr;</a>`,projectGrid.appendChild(o)})}catch(e){projectGrid.innerHTML='<p style-align: center; color: #ff6b6b;">Failed to load projects.</p>',console.error("Error fetching GitHub projects:",e)}}projectGrid&&fetchGithubProjects();const body=document.body,electricalIcons=["⚡","📡","🔌","🧲","🔬","💡","⚙️","💻","⚛️","🛰️"],numIcons=25;let iconElements=[],mouse={x:0,y:0};function initElectricalIcons(){for(let e=0;e<numIcons;e++){const t=document.createElement("div");t.className="electrical-icon",t.textContent=electricalIcons[Math.floor(Math.random()*electricalIcons.length)],t.style.left=`${100*Math.random()}vw`,t.style.top=`${100*Math.random()}vh`,t.dataset.speedX=.2*(Math.random()-.5),t.dataset.speedY=.2*(Math.random()-.5),t.dataset.rotation=360*Math.random(),t.style.transform=`rotate(${t.dataset.rotation}deg)`,iconElements.push(t),body.appendChild(t)}}function animateIcons(){const e=.05,t=.05;iconElements.forEach(n=>{let o=parseFloat(n.style.left),a=parseFloat(n.style.top);o+=parseFloat(n.dataset.speedX),a+=parseFloat(n.dataset.speedY),o<-5?o=105:o>105&&(o=-5),a<-5?a=105:a>105&&(a=-5);const i=(mouse.x/window.innerWidth-.5)*e*100,r=(mouse.y/window.innerHeight-.5)*e*100;n.style.left=`${o+i}vw`,n.style.top=`${a+r}vh`,n.dataset.rotation=(parseFloat(n.dataset.rotation)+t)%360,n.style.transform=`rotate(${n.dataset.rotation}deg)`;const c=n.getBoundingClientRect(),d=c.left+c.width/2,s=c.top+c.height/2,l=Math.sqrt(Math.pow(mouse.x-d,2)+Math.pow(mouse.y-s,2));l<150?(n.style.opacity=.1+.5*(1-l/150),n.style.transform=`rotate(${n.dataset.rotation}deg) scale(${1+.3*(1-l/150)})`):n.style.opacity=.1}),requestAnimationFrame(animateIcons)}window.addEventListener("mousemove",e=>{mouse.x=e.clientX,mouse.y=e.clientY;const t=e.clientX/window.innerWidth,n=getComputedStyle(body).getPropertyValue("--bg-color-start").trim(),o=getComputedStyle(body).getPropertyValue("--bg-color-end").trim(),a=e=>{let t=0,n=0,o=0;return 7===e.length?(t=parseInt(e.slice(1,3),16),n=parseInt(e.slice(3,5),16),o=parseInt(e.slice(5,7),16)):4===e.length&&(t=parseInt(e[1]+e[1],16),n=parseInt(e[2]+e[2],16),o=parseInt(e[3]+e[3],16)),{r:t,g:n,b:o}},i=a(n),r=a(o),c=Math.round(i.r+t*(r.r-i.r)),d=Math.round(i.g+t*(r.g-i.g)),s=Math.round(i.b+t*(r.b-i.b));body.style.backgroundColor=`#${(16777216+(c<<16)+(d<<8)+s).toString(16).slice(1)}`}),initElectricalIcons(),animateIcons();
+    </script>
+</body>
+</html>
