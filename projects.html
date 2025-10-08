@@ -2,70 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NodeNexus | Projects</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --bg-color-start: #0a0e14; --bg-color-end: #121820; --card-color: #161b22; --border-color: #30363d; --primary-text: #c9d1d9; --secondary-text: #8b949e; --accent-color: #58a6ff; --accent-glow: rgba(88, 166, 255, 0.5); --font-primary: 'Inter', sans-serif; --font-mono: 'Source Code Pro', monospace; --navbar-bg: rgba(22, 27, 34, 0.75); --card-bg: rgba(22, 27, 34, 0.65); --btn-primary-text: #0a0e14; --icon-color: var(--accent-color);
-        }
-        body.light-mode {
-            --bg-color-start: #f0f2f5; --bg-color-end: #ffffff; --card-color: #ffffff; --border-color: #d0d7de; --primary-text: #1f2328; --secondary-text: #57606a; --accent-color: #0969da; --accent-glow: rgba(9, 105, 218, 0.4); --navbar-bg: rgba(255, 255, 255, 0.75); --card-bg: rgba(255, 255, 255, 0.65); --btn-primary-text: #ffffff; --icon-color: #0047b3;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        body { background: linear-gradient(135deg, var(--bg-color-start), var(--bg-color-end)); color: var(--primary-text); font-family: var(--font-primary); margin: 0; line-height: 1.6; overflow-x: hidden; position: relative; transition: background-color 0.5s ease, color 0.5s ease; }
-        body.modal-open { overflow: hidden; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .navbar { backdrop-filter: blur(18px) saturate(180%); -webkit-backdrop-filter: blur(18px) saturate(180%); background-color: var(--navbar-bg); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; transition: background-color 0.5s ease; }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 600; color: var(--primary-text); text-decoration: none; }
-        .nav-menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
-        .nav-link { color: var(--secondary-text); text-decoration: none; font-size: 1rem; font-weight: 500; transition: color 0.3s ease; }
-        .nav-link:hover, .nav-link.active { color: var(--accent-color); }
-        .theme-toggle-btn { background: none; border: 1px solid var(--border-color); color: var(--secondary-text); cursor: pointer; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        header { text-align: center; margin-bottom: 3rem; }
-        .page-title { font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 0.5rem; }
-        .subtitle { font-family: var(--font-mono); color: var(--secondary-text); max-width: 600px; margin: 0 auto 3rem auto; }
-        .btn { display: inline-block; padding: 0.6rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
-        .btn-secondary { background-color: transparent; border: 1px solid var(--border-color); color: var(--primary-text); }
-        .btn-secondary:hover { border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
-        #project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
-        .project-card { background: var(--card-bg); backdrop-filter: blur(22px) saturate(180%); -webkit-backdrop-filter: blur(22px) saturate(180%); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; animation: fadeIn 0.5s forwards; opacity: 0; transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
-        .project-card:hover { transform: translateY(-8px); box-shadow: 0 8px 40px var(--accent-glow); }
-        .project-card h3 { font-size: 1.5rem; margin: 0 0 0.5rem; color: var(--primary-text); }
-        .project-description { color: var(--secondary-text); font-size: 0.95rem; flex-grow: 1; margin-bottom: 1.5rem; }
-        .tech-tags { margin-bottom: 1.5rem; }
-        .tag { background-color: rgba(88, 166, 255, 0.1); color: var(--accent-color); font-family: var(--font-mono); font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 20px; margin: 0.25rem 0.25rem 0.25rem 0; display: inline-block; }
-        .project-links { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-        .project-link { color: var(--accent-color); text-decoration: none; font-weight: 600; }
-        footer { text-align: center; margin-top: 5rem; padding: 2rem 0; border-top: 1px solid var(--border-color); color: var(--secondary-text); }
-        .electrical-icon { position: absolute; font-size: clamp(1.5rem, 5vw, 3rem); opacity: 0.1; pointer-events: none; z-index: -1; color: var(--icon-color); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* --- Modal Styles --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .project-modal { position: fixed; top: 50%; left: 50%; width: 90%; max-width: 800px; max-height: 85vh; background: var(--card-bg); backdrop-filter: blur(26px) saturate(200%); -webkit-backdrop-filter: blur(26px) saturate(200%); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 50px rgba(0,0,0,0.2); z-index: 2001; transform: translate(-50%, -50%) scale(0.9); opacity: 0; visibility: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
-        .project-modal.active { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
-        .modal-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h2 { margin: 0; font-size: 1.5rem; }
-        .modal-close { background: none; border: none; font-size: 2rem; color: var(--secondary-text); cursor: pointer; line-height: 1; transition: color 0.3s ease; }
-        .modal-close:hover { color: var(--primary-text); }
-        .modal-body { padding: 1.5rem; overflow-y: auto; }
-        /* --- Styles for README Content --- */
-        .modal-body h1, .modal-body h2, .modal-body h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 0.5em; margin-top: 1.5em; }
-        .modal-body p { margin: 1em 0; }
-        .modal-body code { background-color: rgba(0,0,0,0.2); padding: 0.2em 0.4em; border-radius: 4px; font-family: var(--font-mono); }
-        .modal-body pre { background-color: rgba(0,0,0,0.3); padding: 1em; border-radius: 8px; overflow-x: auto; }
-        .modal-body pre code { background: none; padding: 0; }
-        .modal-body ul { padding-left: 1.5em; }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
+
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">NodeNexus_</a>
@@ -74,145 +22,21 @@
                 <li class="nav-item"><a href="projects.html" class="nav-link active">Projects</a></li>
                 <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
-            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle light/dark mode"></button>
         </div>
     </nav>
 
-    <div class="container">
+    <main class="container">
         <header>
             <h1 class="page-title">My Work</h1>
             <p class="subtitle">A collection of my public projects, fetched via the GitHub API.</p>
         </header>
-        <main>
-            <div id="project-grid"></div>
-        </main>
-    </div>
-
-    <div class="modal-overlay" id="modal-overlay"></div>
-    <div class="project-modal" id="project-modal">
-        <div class="modal-header">
-            <h2 id="modal-title">Project Title</h2>
-            <button class="modal-close" id="modal-close-btn">&times;</button>
-        </div>
-        <div class="modal-body" id="modal-body">
-            </div>
-    </div>
+        <div id="project-grid"></div>
+    </main>
 
     <footer>
         <p>Built by NodeNexus.</p>
     </footer>
 
-    <script>
-        // --- Theme Toggling Logic ---
-        const themeToggleButton = document.getElementById('theme-toggle');
-        const sunIcon = '☀️';
-        const moonIcon = '🌙';
-        function applyInitialTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.body.classList.toggle('light-mode', savedTheme === 'light');
-            themeToggleButton.textContent = savedTheme === 'light' ? moonIcon : sunIcon;
-        }
-        themeToggleButton.addEventListener('click', () => {
-            const isLight = document.body.classList.toggle('light-mode');
-            const newTheme = isLight ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            themeToggleButton.textContent = isLight ? moonIcon : sunIcon;
-        });
-        document.addEventListener('DOMContentLoaded', applyInitialTheme);
-
-        // --- Modal Logic ---
-        const modal = document.getElementById('project-modal');
-        const overlay = document.getElementById('modal-overlay');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-        
-        function openModal() {
-            document.body.classList.add('modal-open');
-            overlay.classList.add('active');
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            document.body.classList.remove('modal-open');
-            overlay.classList.remove('active');
-            modal.classList.remove('active');
-        }
-
-        modalCloseBtn.addEventListener('click', closeModal);
-        overlay.addEventListener('click', closeModal);
-
-        // --- GitHub Project & README Fetching Logic ---
-        const githubUsername = 'NodeNexus';
-        const projectGrid = document.getElementById('project-grid');
-
-        async function fetchGithubProjects() {
-            if (!projectGrid) return;
-            projectGrid.innerHTML = `<p style="text-align: center; color: var(--secondary-text);">Fetching projects...</p>`;
-
-            try {
-                const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc`);
-                if (!response.ok) throw new Error(`API error: ${response.status}`);
-                
-                const repos = await response.json();
-                projectGrid.innerHTML = '';
-                if (repos.length === 0) {
-                    projectGrid.innerHTML = `<p>No public repositories found.</p>`;
-                    return;
-                }
-
-                repos.forEach(repo => {
-                    if (repo.fork) return;
-                    const tags = repo.language ? [repo.language, ...repo.topics] : repo.topics;
-                    const tagsHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-                    
-                    const projectCard = document.createElement('div');
-                    projectCard.className = 'project-card';
-                    projectCard.innerHTML = `
-                        <h3>${repo.name}</h3>
-                        <p class="project-description">${repo.description || 'No description provided.'}</p>
-                        <div class="tech-tags">${tagsHTML || ''}</div>
-                        <div class="project-links">
-                            <button class="btn btn-secondary view-details-btn">View Details</button>
-                            <a href="${repo.html_url}" class="project-link" target="_blank">On GitHub &rarr;</a>
-                        </div>`;
-
-                    projectCard.querySelector('.view-details-btn').addEventListener('click', () => {
-                        showProjectDetails(repo);
-                    });
-                    projectGrid.appendChild(projectCard);
-                });
-            } catch (error) {
-                projectGrid.innerHTML = `<p style="text-align: center; color: #ff6b6b;">Failed to load projects. GitHub API rate limit may have been exceeded.</p>`;
-                console.error("Error fetching GitHub projects:", error);
-            }
-        }
-
-        async function showProjectDetails(repo) {
-            modalTitle.textContent = repo.name;
-            modalBody.innerHTML = '<p>Loading README...</p>';
-            openModal();
-
-            try {
-                const readmeResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repo.name}/readme`);
-                if (!readmeResponse.ok) throw new Error('README not found.');
-
-                const readmeData = await readmeResponse.json();
-                const markdownContent = atob(readmeData.content);
-                modalBody.innerHTML = marked.parse(markdownContent);
-            } catch (error) {
-                modalBody.innerHTML = `<p>Could not load README. The repository might not have one.</p><p style="color: var(--secondary-text);">${error.message}</p>`;
-                console.error('Error fetching README:', error);
-            }
-        }
-
-        if (projectGrid) {
-            fetchGithubProjects();
-        }
-
-        // --- Background Animation (Unchanged) ---
-        // This part remains the same and controls the floating icons
-    </script>
+    <script src="script.js"></script>
 </body>
-
 </html>
