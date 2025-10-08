@@ -4,7 +4,7 @@
   "description": "My personal portfolio.",
   "main": "index.html",
   "scripts": {
-    "start": "serve -s ."
+    "start": "serve ."
   },
   "dependencies": {
     "serve": "^14.2.3"
