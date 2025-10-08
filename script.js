@@ -1,167 +1,215 @@
-// --- Theme Toggling Logic ---
-const themeToggleButton = document.getElementById('theme-toggle');
-const sunIcon = '☀️';
-const moonIcon = '🌙';
-
-// Function to apply the saved theme on page load
-function applyInitialTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.classList.toggle('light-mode', savedTheme === 'light');
-    themeToggleButton.textContent = savedTheme === 'light' ? moonIcon : sunIcon;
-}
-
-// Event listener for the toggle button
-themeToggleButton.addEventListener('click', () => {
-    const isLight = document.body.classList.toggle('light-mode');
-    const newTheme = isLight ? 'light' : 'dark';
-    localStorage.setItem('theme', newTheme);
-    themeToggleButton.textContent = isLight ? moonIcon : sunIcon;
-});
-
-// Apply the theme when the DOM is loaded
-document.addEventListener('DOMContentLoaded', applyInitialTheme);
-
+// --- Global Variables ---
+const githubUsername = 'NodeNexus';
 
 // --- GitHub Project Fetching Logic ---
-const githubUsername = 'NodeNexus';
-const projectGrid = document.getElementById('project-grid');
-
 async function fetchGithubProjects() {
-    // Only run if the project grid exists on the current page
-    if (!projectGrid) {
-        return;
-    }
-    projectGrid.innerHTML = `<p style="text-align: center; font-family: var(--font-mono); color: var(--secondary-text);">Fetching projects...</p>`;
+    const projectGrid = document.getElementById('project-grid');
+    if (!projectGrid) return; // Exit if not on the projects page
+
+    projectGrid.innerHTML = `<p style="text-align: center; font-family: var(--font-mono); color: var(--secondary-text);">Fetching projects from GitHub API...</p>`;
 
     try {
         const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const repos = await response.json();
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         
+        const repos = await response.json();
         projectGrid.innerHTML = '';
+
         if (repos.length === 0) {
-            projectGrid.innerHTML = `<p style="text-align: center; color: var(--secondary-text);">No public repositories found.</p>`;
+            projectGrid.innerHTML = `<p style="text-align: center; color: var(--secondary-text);">No public repositories found for this user.</p>`;
             return;
         }
 
+        let delay = 0;
         repos.forEach(repo => {
-            if (repo.fork) {
-                return;
-            }
+            if (repo.fork) return;
+
             const tags = repo.language ? [repo.language, ...repo.topics] : repo.topics;
             const tagsHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
             
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
+            projectCard.style.animationDelay = `${delay}s`;
+
             projectCard.innerHTML = `
                 <h3>${repo.name}</h3>
                 <p class="project-description">${repo.description || 'No description provided.'}</p>
                 <div class="tech-tags">${tagsHTML || '<span class="tag">No-Tags</span>'}</div>
-                <a href="${repo.html_url}" class="project-link" target="_blank">View on GitHub &rarr;</a>`;
+                <a href="${repo.html_url}" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>`;
+
             projectGrid.appendChild(projectCard);
+            delay += 0.1;
         });
+        
+        // Re-initialize 3D effects after projects have been rendered
+        init3DGlassmorphism();
+
     } catch (error) {
-        projectGrid.innerHTML = `<p style="text-align: center; color: #ff6b6b;">Failed to load projects.</p>`;
+        projectGrid.innerHTML = `<p style="text-align: center; color: #ff6b6b;">Failed to load projects. Please check the console for details.</p>`;
         console.error('Error fetching GitHub projects:', error);
     }
 }
 
-// Run the project fetcher if the project grid is on the page
-if (projectGrid) {
-    fetchGithubProjects();
+// --- 3D Glassmorphism Tilt & Glare Effect ---
+function init3DGlassmorphism() {
+    const cards = document.querySelectorAll('.welcome-card, .project-card');
+    const TILT_STRENGTH = 12;
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const rotateY = TILT_STRENGTH * ((mouseX / rect.width) - 0.5);
+            const rotateX = -TILT_STRENGTH * ((mouseY / rect.height) - 0.5);
+            
+            card.style.setProperty('--mouse-x', `${mouseX}px`);
+            card.style.setProperty('--mouse-y', `${mouseY}px`);
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+    });
 }
 
+// --- Dynamic Particle Background ---
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particlesArray;
 
-// --- Dynamic Background & Electrical Icons Logic ---
-const body = document.body;
-const electricalIcons = ['⚡', '📡', '🔌', '🧲', '🔬', '💡', '⚙️', '💻', '⚛️', '🛰️'];
-const numIcons = 25;
-let iconElements = [];
-let mouse = { x: 0, y: 0 };
+const mouse = {
+    x: null,
+    y: null,
+    radius: 150
+};
 
-function initElectricalIcons() {
-    for (let i = 0; i < numIcons; i++) {
-        const icon = document.createElement('div');
-        icon.className = 'electrical-icon';
-        icon.textContent = electricalIcons[Math.floor(Math.random() * electricalIcons.length)];
-        icon.style.left = `${Math.random() * 100}vw`;
-        icon.style.top = `${Math.random() * 100}vh`;
-        // Slowed down speed
-        icon.dataset.speedX = (Math.random() - 0.5) * 0.2; 
-        icon.dataset.speedY = (Math.random() - 0.5) * 0.2;
-        icon.dataset.rotation = Math.random() * 360;
-        icon.style.transform = `rotate(${icon.dataset.rotation}deg)`;
-        iconElements.push(icon);
-        body.appendChild(icon);
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+class Particle {
+    constructor(x, y, directionX, directionY, size, color, type) {
+        this.x = x;
+        this.y = y;
+        this.directionX = directionX;
+        this.directionY = directionY;
+        this.size = size;
+        this.color = color;
+        this.type = type; // 'node' or 'dust'
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+
+    update() {
+        if (this.x > canvas.width + this.size) this.x = -this.size;
+        if (this.x < -this.size) this.x = canvas.width + this.size;
+        if (this.y > canvas.height + this.size) this.y = -this.size;
+        if (this.y < -this.size) this.y = canvas.height + this.size;
+
+        if (this.type === 'node') {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < mouse.radius + this.size) {
+                if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 2; }
+                if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 2; }
+                if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 2; }
+                if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 2; }
+            }
+        }
+
+        this.x += this.directionX;
+        this.y += this.directionY;
+        this.draw();
     }
 }
 
-function animateIcons() {
-    const parallaxStrength = 0.05;
-    // Slowed down rotation
-    const rotateSpeed = 0.05; 
+function initParticles() {
+    particlesArray = [];
+    let numberOfNodes = (canvas.height * canvas.width) / 15000;
+    for (let i = 0; i < numberOfNodes; i++) {
+        let size = (Math.random() * 2) + 1;
+        let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+        let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+        let directionX = (Math.random() * 0.2) + 0.1;
+        let directionY = (Math.random() * 0.4) - 0.2;
+        let color = `rgba(88, 166, 255, ${Math.random() * 0.6 + 0.2})`;
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color, 'node'));
+    }
 
-    iconElements.forEach(icon => {
-        let currentX = parseFloat(icon.style.left);
-        let currentY = parseFloat(icon.style.top);
-        currentX += parseFloat(icon.dataset.speedX);
-        currentY += parseFloat(icon.dataset.speedY);
-
-        if (currentX < -5) currentX = 105; if (currentX > 105) currentX = -5;
-        if (currentY < -5) currentY = 105; if (currentY > 105) currentY = -5;
-
-        const dx = (mouse.x / window.innerWidth - 0.5) * parallaxStrength * 100;
-        const dy = (mouse.y / window.innerHeight - 0.5) * parallaxStrength * 100;
-        icon.style.left = `${currentX + dx}vw`;
-        icon.style.top = `${currentY + dy}vh`;
-
-        icon.dataset.rotation = (parseFloat(icon.dataset.rotation) + rotateSpeed) % 360;
-        
-        const rect = icon.getBoundingClientRect();
-        const iconCenterX = rect.left + rect.width / 2;
-        const iconCenterY = rect.top + rect.height / 2;
-        const distance = Math.sqrt(Math.pow(mouse.x - iconCenterX, 2) + Math.pow(mouse.y - iconCenterY, 2));
-        const proximityThreshold = 150;
-
-        if (distance < proximityThreshold) {
-            const influence = 1 - (distance / proximityThreshold);
-            icon.style.opacity = 0.1 + (0.5 * influence);
-            icon.style.transform = `rotate(${icon.dataset.rotation}deg) scale(${1 + (0.3 * influence)})`;
-        } else {
-            icon.style.opacity = 0.1;
-            icon.style.transform = `rotate(${icon.dataset.rotation}deg)`;
-        }
-    });
-    requestAnimationFrame(animateIcons);
+    let numberOfDust = 100;
+    for (let i = 0; i < numberOfDust; i++) {
+        let size = (Math.random() * 1.5) + 0.5;
+        let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+        let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+        let directionX = (Math.random() * 0.1) + 0.05;
+        let directionY = (Math.random() * 0.2) - 0.1;
+        let color = `rgba(88, 166, 255, ${Math.random() * 0.2 + 0.05})`;
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color, 'dust'));
+    }
 }
 
-window.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+function animateParticles() {
+    requestAnimationFrame(animateParticles);
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
 
-    const xFactor = e.clientX / window.innerWidth;
-    const colorStart = getComputedStyle(body).getPropertyValue('--bg-color-start').trim();
-    const colorEnd = getComputedStyle(body).getPropertyValue('--bg-color-end').trim();
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+    }
+    connectParticles();
+}
+
+function connectParticles() {
+    let opacityValue = 1;
+    for (let a = 0; a < particlesArray.length; a++) {
+        if (particlesArray[a].type !== 'node') continue;
+
+        for (let b = a; b < particlesArray.length; b++) {
+            if (particlesArray[b].type !== 'node') continue;
+
+            let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+            if (distance < (canvas.width / 9) * (canvas.height / 9)) {
+                opacityValue = 1 - (distance / 20000);
+                ctx.strokeStyle = `rgba(88, 166, 255, ${opacityValue})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initParticles();
+}
+
+// --- Initial Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize effects that run on every page
+    init3DGlassmorphism();
     
-    // Hex to RGB conversion
-    const hexToRgb = hex => {
-        let r = 0, g = 0, b = 0;
-        if (hex.length === 7) { r = parseInt(hex.slice(1, 3), 16); g = parseInt(hex.slice(3, 5), 16); b = parseInt(hex.slice(5, 7), 16); } 
-        else if (hex.length === 4) { r = parseInt(hex[1] + hex[1], 16); g = parseInt(hex[2] + hex[2], 16); b = parseInt(hex[3] + hex[3], 16); }
-        return { r, g, b };
-    };
-
-    // Interpolate colors
-    const rgb1 = hexToRgb(colorStart);
-    const rgb2 = hexToRrb(colorEnd);
-    const r = Math.round(rgb1.r + xFactor * (rgb2.r - rgb1.r));
-    const g = Math.round(rgb1.g + xFactor * (rgb2.g - rgb1.g));
-    const b = Math.round(rgb1.b + xFactor * (rgb2.b - rgb1.b));
-    body.style.backgroundColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+    // Check if the canvas exists before trying to use it
+    if (canvas) {
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animateParticles();
+    }
+    
+    // Page-specific logic: Only fetch projects if the project grid exists
+    if (document.getElementById('project-grid')) {
+        fetchGithubProjects();
+    }
 });
-
-// Initialize the background animation
-initElectricalIcons();
-animateIcons();
