@@ -9,11 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <canvas id="particle-canvas"></canvas>
-
+    
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">NodeNexus_</a>
@@ -22,16 +24,28 @@
                 <li class="nav-item"><a href="projects.html" class="nav-link active">Projects</a></li>
                 <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle light/dark mode"></button>
         </div>
     </nav>
 
-    <main class="container">
+    <div class="container">
         <header>
             <h1 class="page-title">My Work</h1>
             <p class="subtitle">A collection of my public projects, fetched via the GitHub API.</p>
         </header>
-        <div id="project-grid"></div>
-    </main>
+        <main>
+            <div id="project-grid"></div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="project-modal" id="project-modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Project Title</h2>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
 
     <footer>
         <p>Built by NodeNexus.</p>
